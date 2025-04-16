@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Your Beats</title>
+  <style>
+    :root {
+      --primary-color: #1DB954;
+      --secondary-color: #1e1e1e;
+      --bg-color-dark: #121212;
+      --bg-color-light: #f7f7f7;
+      --text-color-light: #121212;
+      --text-color-dark: #fff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #1DB954, #121212);
+      color: var(--text-color-dark);
+      transition: 0.3s;
+    }
+
+    body.light {
+      background: linear-gradient(135deg, #f7f7f7, #fff);
+      color: var(--text-color-light);
+    }
+
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .box {
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 30px;
+      border-radius: 10px;
+      width: 320px;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+      text-align: center;
+    }
+
+    h2 {
+      font-size: 24px;
+      color: var(--primary-color);
+      margin-bottom: 20px;
+    }
+
+    input[type="text"], input[type="password"], input[type="email"], input[type="file"] {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      background-color: #333;
+      color: #fff;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #1ed760;
+    }
+
+    .switch {
+      margin-top: 15px;
+      font-size: 14px;
+      color: #bbb;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    .switch:hover {
+      color: var(--primary-color);
+    }
+
+    #musicPage {
+      display: none;
+      padding: 20px;
+    }
+
+    header {
+      background-color: var(--primary-color);
+      padding: 15px;
+      font-size: 24px;
+      font-weight: bold;
+      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+    }
+
+    .logout-btn {
+      background: white;
+      color: var(--primary-color);
+      border: none;
+      padding: 5px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .toggle-mode {
+      background: none;
+      color: white;
+      border: 1px solid white;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    #searchBar {
+      width: 100%;
+      max-width: 500px;
+      padding: 12px;
+      border-radius: 5px;
+      border: none;
+      font-size: 16px;
+      margin: 20px auto;
+      background-color: #444;
+      color: white;
+      display: block;
+    }
+
+    h3 {
+      margin-top: 30px;
+    }
+
+    .card-container {
+      display: flex;
+      overflow-x: auto;
+      gap: 20px;
+      padding: 20px 0;
+      scrollbar-width: none;
+    }
+
+    .card-container::-webkit-scrollbar {
+      display: none;
+    }
+
+    .card {
+      background-color: rgba(0, 0, 0, 0.6);
+      border-radius: 15px;
+      padding: 15px;
+      min-width: 150px;
+      max-width: 180px;
+      text-align: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      flex-shrink: 0;
+    }
+
+    .card img {
+      width: 100%;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .card p {
+      font-weight: bold;
+      color: var(--primary-color);
+      margin: 5px 0;
+    }
+
+    .card audio {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Login/Register -->
+  <div class="container" id="authPage">
+    <div class="box" id="loginBox">
+      <h2>Login</h2>
+      <input type="text" id="loginUsername" placeholder="Username" />
+      <input type="password" id="loginPassword" placeholder="Password" />
+      <button onclick="login()">Login</button>
+      <div class="switch" onclick="showRegister()">Don't have an account? Register</div>
+    </div>
+
+    <div class="box" id="registerBox" style="display:none;">
+      <h2>Register</h2>
+      <input type="text" id="regUsername" placeholder="Username" />
+      <input type="email" id="regEmail" placeholder="Email" />
+      <input type="password" id="regPassword" placeholder="Password" />
+      <button onclick="register()">Register</button>
+      <div class="switch" onclick="showLogin()">Already have an account? Login</div>
+    </div>
+  </div>
+
+  <!-- Music Page -->
+  <div id="musicPage">
+    <header>
+      <span>🎧Your Beats </span>
+      <div>
+        <button class="toggle-mode" onclick="toggleTheme()">Toggle Mode</button>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+      </div>
+    </header>
+
+    <input type="text" id="searchBar" placeholder="Search songs..." onkeyup="filterSongs()" />
+
+    <h3>Trending Songs</h3>
+    <div id="songList" class="card-container">
+      <div class="card">
+        <img src="https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228" alt="cover">
+        <p>Acoustic Breeze</p>
+        <audio controls>
+          <source src="https://www.bensound.com/bensound-music/bensound-acousticbreeze.mp3" type="audio/mpeg" />
+        </audio>
+      </div>
+      <div class="card">
+        <img src="C:\Users\praga\Downloads\gannaweb\image2.jpg">
+        <p>Creative Minds</p>
+        <audio controls>
+          <source src="https://www.bensound.com/bensound-music/bensound-creativeminds.mp3" type="audio/mpeg" />
+        </audio>
+      </div>
+
+      <div class="card">
+        <img src="C:\Users\praga\Downloads\gannaweb\image1.jpg">
+        <p>Summer</p>
+        <audio controls>
+          <source src="https://www.bensound.com/bensound-music/bensound-summer.mp3" type="audio/mpeg" />
+        </audio>
+      </div>
+
+<div class="card">
+        <img src="C:\Users\praga\Downloads\gannaweb\fell for u.jpg">
+        <p>Fell For You</p>
+        <audio controls>
+          <source src="C:\Users\praga\Downloads\gannaweb\videoplayback.mp4" />
+        </audio>
+      </div>
+<div class="card">
+        <img src="C:\Users\praga\Downloads\gannaweb\lpy.jpg">
+        <p>Lutt Putt Gya</p>
+        <audio controls>
+          <source src="C:\Users\praga\Downloads\gannaweb\lutt putt gaya.mp4" />
+        </audio>
+      </div>
+<div class="card">
+        <img src="C:\Users\praga\Downloads\gannaweb\uyi aama.jpg">
+        <p>Uyi Amma</p>
+        <audio controls>
+          <source src="C:\Users\praga\Downloads\gannaweb\UYI AMMA.mp4" />
+        </audio>
+      </div>
+<div class="card">
+        <img src="C:\Users\praga\Downloads\gannaweb\hum toh diwane.jpg">
+        <p>Hum Toh Deewane</p>
+        <audio controls>
+          <source src="C:\Users\praga\Downloads\gannaweb\Hum Toh Deewane.mp4" />
+        </audio>
+      </div>
+<div class="card">
+        <img src="C:\Users\praga\Downloads\gannaweb\toofan.jpg">
+        <p>Toofan</p>
+        <audio controls>
+          <source src="C:\Users\praga\Downloads\gannaweb\Toofan.mp4" />
+        </audio>
+      </div>
+
+    </div>
+<h3>Marathi Songs</h3>
+<div id="marathiList" class="card-container">
+ <div class="card">
+        <img src="C:\Users\praga\Downloads\gannaweb\Gaav-Sutana.jpg">
+        <p>Gaav sutana</p>
+        <audio controls>
+          <source src="C:\Users\praga\Downloads\gaav sutana.mp3"/>
+        </audio>
+      </div>
+ <div class="card">
+        <img src="C:\Users\praga\Downloads\gannaweb\Sairat.jpg">
+        <p>Sairat Jhala Ji</p>
+        <audio controls>
+          <source src="C:\Users\praga\Downloads\gannaweb\Sairat Jhala Ji.mp4"/>
+        </audio>
+      </div>
+ <div class="card">
+        <img src="C:\Users\praga\Downloads\gannaweb\yad lagla.jpg">
+        <p>Yad Lagla</p>
+        <audio controls>
+          <source src="C:\Users\praga\Downloads\gannaweb\Yad Lagla.mp4"/>
+        </audio>
+      </div>
+ <div class="card">
+        <img src="C:\Users\praga\Downloads\gannaweb\chimbh bhijlele.jpg">
+        <p>Chimbh Bhijalele.</p>
+        <audio controls>
+          <source src="C:\Users\praga\Downloads\gannaweb\Chimbh Bhijalele.mp4"/>
+        </audio>
+      </div>
+ <div class="card">
+        <img src="C:\Users\praga\Downloads\gannaweb\sar sukhachi shravani.jpg">
+        <p>\Sar Sukhachi Shravani</p>
+        <audio controls>
+          <source src="C:\Users\praga\Downloads\gannaweb\Sar Sukhachi Shravani.mp4"/>
+        </audio>
+      </div>
+ <div class="card">
+        <img src="C:\Users\praga\Downloads\gannaweb\timepassimage.jpg">
+        <p>Timepass</p>
+        <audio controls>
+          <source src="C:\Users\praga\Downloads\gannaweb\timepass.mp4"/>
+        </audio>
+      </div>
+ <div class="card">
+        <img src="C:\Users\praga\Downloads\gannaweb\ved.jpg">
+        <p>Sukh Kalale</p>
+        <audio controls>
+          <source src="C:\Users\praga\Downloads\gannaweb\Sukh Kalale.mp4"/>
+        </audio>
+      </div>
+<div class="card">
+        <img src="C:\Users\praga\Downloads\gannaweb\malharvari.jpg">
+        <p>मल्हारवारी</p>
+        <audio controls>
+          <source src="C:\Users\praga\Downloads\gannaweb\Malhar wari - Agga bai arrecha _ Ajay - Atul _ Samiir Cover मल्हारवारी.mp4"/>
+        </audio>
+      </div>
+</div>
+
+
+    <div>
+      <h3>Upload Your Song</h3>
+      <input type="file" id="fileUpload" accept="audio/*" onchange="uploadSong(event)" />
+    </div>
+  </div>
+<script>
+  // Show Register/Login Forms
+  function showRegister() {
+    document.getElementById("loginBox").style.display = "none";
+    document.getElementById("registerBox").style.display = "block";
+  }
+
+  function showLogin() {
+    document.getElementById("registerBox").style.display = "none";
+    document.getElementById("loginBox").style.display = "block";
+  }
+
+  // Registration
+  function register() {
+    const username = document.getElementById("regUsername").value.trim();
+    const email = document.getElementById("regEmail").value.trim();
+    const password = document.getElementById("regPassword").value;
+
+    if (username && email && password) {
+      const users = JSON.parse(localStorage.getItem("users") || "{}");
+
+      if (users[email]) {
+        alert("User already exists!");
+        return;
+      }
+
+      users[email] = { username, password };
+      localStorage.setItem("users", JSON.stringify(users));
+
+      alert("Registration successful!");
+      showLogin();
+    } else {
+      alert("Please fill all fields!");
+    }
+  }
+
+  // Login
+  function login() {
+    const usernameInput = document.getElementById("loginUsername").value.trim();
+    const passwordInput = document.getElementById("loginPassword").value;
+
+    const users = JSON.parse(localStorage.getItem("users") || "{}");
+
+    let foundUser = null;
+    for (let email in users) {
+      if (users[email].username === usernameInput && users[email].password === passwordInput) {
+        foundUser = { email, ...users[email] };
+        break;
+      }
+    }
+
+    if (foundUser) {
+      localStorage.setItem("loggedInUser", JSON.stringify(foundUser));
+      showDashboard(foundUser.username);
+    } else {
+      alert("Invalid Username or Password");
+    }
+  }
+
+  // Dashboard After Login
+  function showDashboard(username) {
+    document.getElementById("authPage").style.display = "none";
+    document.getElementById("musicPage").style.display = "block";
+
+    let welcome = document.createElement("div");
+    welcome.textContent = `Welcome, ${username}`;
+    welcome.style.fontWeight = "bold";
+    welcome.style.padding = "10px";
+    welcome.style.fontSize = "18px";
+
+    const header = document.querySelector("header");
+    header.insertBefore(welcome, header.firstChild);
+  }
+
+  // Logout
+  function logout() {
+    localStorage.removeItem("loggedInUser");
+    document.getElementById("musicPage").style.display = "none";
+    document.getElementById("authPage").style.display = "flex";
+
+    // Remove Welcome text
+    const welcomeText = document.querySelector("header div:first-child");
+    if (welcomeText && welcomeText.textContent.startsWith("Welcome,")) {
+      welcomeText.remove();
+    }
+  }
+
+  // Theme Toggle
+  function toggleTheme() {
+    document.body.classList.toggle("light");
+  }
+
+  // Filter Songs
+  function filterSongs() {
+    const query = document.getElementById("searchBar").value.toLowerCase();
+    const cards = document.querySelectorAll(".card");
+    cards.forEach(card => {
+      const title = card.querySelector("p").textContent.toLowerCase();
+      card.style.display = title.includes(query) ? "block" : "none";
+    });
+  }
+
+  // Upload Song
+  function uploadSong(event) {
+    const file = event.target.files[0];
+    if (file) {
+      alert("Song uploaded: " + file.name);
+      const songList = document.getElementById("songList");
+      const newCard = document.createElement("div");
+      newCard.classList.add("card");
+      newCard.innerHTML = `
+        <img src="https://i.scdn.co/image/ab67616d00001e0281558495ff1c66071f543b4a" alt="cover">
+        <p>${file.name}</p>
+        <audio controls>
+          <source src="${URL.createObjectURL(file)}" type="audio/mpeg" />
+        </audio>
+      `;
+      songList.appendChild(newCard);
+    }
+  }
+
+  // Auto Login if Already Authenticated
+  window.onload = function () {
+    const user = JSON.parse(localStorage.getItem("loggedInUser"));
+    if (user) {
+      showDashboard(user.username);
+    }
+  };
+
+  // Only one audio plays at a time
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll("audio").forEach(audio => {
+      audio.addEventListener("play", () => {
+        document.querySelectorAll("audio").forEach(a => {
+          if (a !== audio) a.pause();
+        });
+      });
+    });
+  });
+</script>
+</body>
+</html>
