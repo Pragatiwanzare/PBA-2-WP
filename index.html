@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Coffee Stop</title>
+
+    <!-- CSS LINK -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<header>
+    <h1>Welcome to The Coffee Stop</h1>
+    <p>Bringing people together, one cup at a time ☕</p>
+</header>
+
+<nav>
+    <a href="#menu">Menu</a>
+    <a href="#about">About Us</a>
+    <a href="#contact">Contact</a>
+</nav>
+
+<section class="container" id="menu">
+    <h2>Handcrafted Curations</h2>
+
+    <div class="menu-item" onclick="orderItem('Bestseller Coffee')">
+        <img src="images/Bestseller.webp" alt="Bestseller">
+        <h3>Bestseller</h3>
+        <p>$3.00</p>
+    </div>
+
+    <div class="menu-item" onclick="orderItem('Drinks')">
+        <img src="images/Drinks.webp" alt="Drinks">
+        <h3>Drinks</h3>
+        <p>$4.50</p>
+    </div>
+
+    <div class="menu-item" onclick="orderItem('Merchandise')">
+        <img src="images/Merchandise.webp" alt="Merchandise">
+        <h3>Merchandise</h3>
+        <p>$4.00</p>
+    </div>
+
+    <div class="menu-item" onclick="orderItem('Coffee At Home')">
+        <img src="images/CoffeeAtHome.webp" alt="Coffee At Home">
+        <h3>Coffee At Home</h3>
+        <p>$5.00</p>
+    </div>
+</section>
+
+<section class="container" id="about">
+    <h2>About Us</h2>
+    <p>
+        At The Coffee Stop, coffee is more than a drink —
+        it's a moment of comfort, connection, and joy.
+    </p>
+</section>
+
+<section class="container" id="contact">
+    <h2>Contact Us</h2>
+    <p>Email: pragati@thecoffeestop.com</p>
+    <p>Phone: +91 8600915556</p>
+    <p>Address: 123 Coffee Lane, Bean Town</p>
+</section>
+
+<footer>
+    <p id="footer-text"></p>
+</footer>
+
+<!-- JAVASCRIPT LINK -->
+<script src="script.js"></script>
+</body>
+</html>
